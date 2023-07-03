@@ -1,0 +1,18 @@
+CREATE DATABASE ride;
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE passengers (
+  id UUID NOT NULL UNIQUE DEFAULT uuid_generate_v4(),
+  name VARCHAR NOT NULL,
+  email VARCHAR UNIQUE NOT NULL ,
+  document VARCHAR UNIQUE NOT NULL
+);
+
+CREATE TABLE drivers (
+  id UUID NOT NULL UNIQUE DEFAULT uuid_generate_v4(),
+  name VARCHAR NOT NULL,
+  email VARCHAR UNIQUE NOT NULL,
+  document VARCHAR NOT NULL,
+  car_plate VARCHAR NOT NULL
+);
