@@ -1,6 +1,11 @@
 import express from 'express';
 import Ride from './ride';
-import { client } from './postgress';
+
+import { PostgresClient } from './postgress';
+import { PGDriverRepository } from './usecases/driver/driver-repository';
+import { SaveDriverUseCase } from './usecases/driver/save-driver';
+import { PGPassengerRepository } from './usecases/passenger/passenger-repository';
+import { SavePassengerUseCase } from './usecases/passenger/save-passenger';
 
 const app = express();
 
@@ -26,15 +31,18 @@ app.post('/passengers', async function (req, res) {
     email: req.body.email,
     document: req.body.document,
   };
-  const result = await client.query(
-    `
-  INSERT INTO passengers(name, email, document)
-  VALUES($1, $2, $3)
-  RETURNING *
-`,
-    [payload.name, payload.email, payload.document]
-  );
-  res.json({ passenger_id: result.rows[0].id });
+
+  try {
+    const client = await PostgresClient.getInstance();
+    if (!client) throw new Error('connection error');
+    const passengerRepository = new PGPassengerRepository(client);
+    const savePassengerUseCase = new SavePassengerUseCase(passengerRepository);
+    const result = await savePassengerUseCase.perform(payload);
+    res.json({ passenger_id: result.passengerId });
+  } catch (e) {
+    const error = e as Error;
+    res.status(409).json({ message: error.message });
+  }
 });
 
 app.post('/drivers', async function (req, res) {
@@ -44,16 +52,18 @@ app.post('/drivers', async function (req, res) {
     document: req.body.document,
     car_plate: req.body.car_plate,
   };
-
-  const result = await client.query(
-    `
-  INSERT INTO drivers(name, email, document, car_plate)
-  VALUES($1, $2, $3, $4)
-  RETURNING *
-`,
-    [payload.name, payload.email, payload.document, payload.car_plate]
-  );
-  res.json({ driver_id: result.rows[0].id });
+  try {
+    const client = await PostgresClient.getInstance();
+    if (!client) throw new Error('connection error');
+    const driverRepository = new PGDriverRepository(client);
+    const saveDriverUseCase = new SaveDriverUseCase(driverRepository);
+    const result = await saveDriverUseCase.perform(payload);
+    res.json({ driver_id: result.driverId });
+  } catch (e) {
+    const error = e as Error;
+    console.log(error.stack);
+    res.status(409).json({ message: error.message });
+  }
 });
 
 app.listen(3000, () => console.log('Running 🚀'));

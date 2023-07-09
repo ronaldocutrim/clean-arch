@@ -16,7 +16,7 @@ export class CpfValidator {
 
   private static isValidCpf(cpfNumber: string) {
     const cpf = CpfValidator.serializeCpf(cpfNumber);
-    return !cpf || cpf.length >= CpfValidator.MAX_CHAR_CPF;
+    return cpf.length >= CpfValidator.MAX_CHAR_CPF;
   }
 
   private static serializeCpf(cpfNumber: string) {
@@ -24,7 +24,7 @@ export class CpfValidator {
   }
 
   static validate(cpfNumber: string): boolean {
-    if (!CpfValidator.isValidCpf(cpfNumber)) return false;
+    if (!cpfNumber || !CpfValidator.isValidCpf(cpfNumber)) return false;
 
     const serializedCpfNumber = CpfValidator.serializeCpf(cpfNumber);
 
