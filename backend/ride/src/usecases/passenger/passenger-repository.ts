@@ -14,7 +14,7 @@ export class PGPassengerRepository implements PassengerRepository {
       [params.name, params.email, params.document]
     );
     const data = {
-      passengerId: result.rows[0].passenger_id as string,
+      passengerId: result.rows[0].id as string,
     };
 
     return data;

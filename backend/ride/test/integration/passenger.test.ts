@@ -44,4 +44,5 @@ test('Deve cadastrar um passageiro', async () => {
   const response = await axios.post(sutUrl, passengerData);
 
   expect(response.status).toBe(200);
+  expect(response.data.passenger_id).toBeTruthy();
 });

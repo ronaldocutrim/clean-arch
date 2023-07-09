@@ -92,8 +92,9 @@ test('Deve retornar um erro se o documento for invalido', async () => {
   expect(response.data.message).toBe('invalid document');
 });
 
-test('Deve cadastrar um passageiro', async () => {
+test('Deve cadastrar um motorista', async () => {
   const response = await axios.post(sutUrl, driverData);
 
   expect(response.status).toBe(200);
+  expect(response.data.driver_id).toBeTruthy();
 });

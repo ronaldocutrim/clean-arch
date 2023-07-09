@@ -16,7 +16,7 @@ export class PGDriverRepository implements DriverRepository {
     );
 
     const data = {
-      driverId: result.rows[0].passenger_id as string,
+      driverId: result.rows[0].id as string,
     };
 
     return data;
