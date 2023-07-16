@@ -1,4 +1,4 @@
-import { CpfValidator } from '@/cpf';
+import { CpfValidator } from '@/domain/models/cpf';
 
 function makeSut({ cpf }: { cpf: string }) {
   return {

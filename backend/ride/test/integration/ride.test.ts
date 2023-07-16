@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const sutUrl = 'http://localhost:3000/calculate_ride';
 
-test('Deve fazer o cálculo do preço de uma corrida durante o dia', async function () {
+test('Deve fazer o cálculo do preço de uma corrida durante o dia', async function() {
   const input = {
     segments: [{ distance: 10, date: '2021-03-01T10:00:00' }],
   };
@@ -11,7 +11,7 @@ test('Deve fazer o cálculo do preço de uma corrida durante o dia', async funct
   expect(output.price).toBe(21);
 });
 
-test('Se a distância for inválida deve lançar um erro', async function () {
+test('Se a distância for inválida deve lançar um erro', async function() {
   const input = {
     segments: [{ distance: -10, date: '2021-03-01T10:00:00' }],
   };

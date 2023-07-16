@@ -1,4 +1,4 @@
-import { PostgresClient } from '@/postgress';
+import { PostgresClient } from '@/infra/postgress';
 import axios from 'axios';
 
 axios.defaults.validateStatus = function () {

@@ -1,14 +1,13 @@
-import { DriverDTO, SaveDriver } from '@/usecases/driver/driver';
-import {
-  DriverRepository,
-  SaveDriverUseCase,
-} from '@/usecases/driver/save-driver';
+import { DriverRepository } from '@/application/repositories/driver-repository';
+import { SaveDriverUseCase } from '@/application/usecases/save-driver';
+import { Driver } from '@/domain/models/driver';
+import { SaveDriver } from '@/domain/usecases/save-driver';
 
 class DriverRepositorySpy implements DriverRepository {
-  driver?: DriverDTO;
+  driver?: Driver;
   output = '';
   callsCount = 0;
-  async create(params: DriverDTO): Promise<SaveDriver.Result> {
+  async create(params: Driver): Promise<SaveDriver.Result> {
     this.callsCount++;
     this.driver = params;
     return {
@@ -19,9 +18,8 @@ class DriverRepositorySpy implements DriverRepository {
   async find(params: {
     email: string;
     document: string;
-  }): Promise<DriverDTO | null> {
-    if (params.document === this.driver?.document)
-      return this.driver as DriverDTO;
+  }): Promise<Driver | null> {
+    if (params.document === this.driver?.document) return this.driver as Driver;
     return null;
   }
 }
@@ -35,7 +33,7 @@ function makeSut() {
   };
 }
 
-describe('CreatePassenger', () => {
+describe('CreateDriver', () => {
   test('Garantir que o repositorio vai ser chamado com os valores corretos', async () => {
     const { sut, createDriverRepository } = makeSut();
 
@@ -43,12 +41,12 @@ describe('CreatePassenger', () => {
       name: 'any_name',
       email: 'any_email',
       document: '61241093369',
-      car_plate: '23bdc',
+      carPlate: '23bdc',
     };
 
-    await sut.perform(payload);
+    await sut.perform(new Driver(payload));
 
-    expect(createDriverRepository.driver).toEqual(payload);
+    expect(createDriverRepository.driver).toEqual(new Driver(payload));
   });
   test('Garantir que o repositorio vai ser chamado apenas uma vez', async () => {
     const { sut, createDriverRepository } = makeSut();
@@ -56,10 +54,10 @@ describe('CreatePassenger', () => {
       name: 'any_name',
       email: 'any_email',
       document: '61241093369',
-      car_plate: '23bdc',
+      carPlate: '23bdc',
     };
 
-    await sut.perform(payload);
+    await sut.perform(new Driver(payload));
     expect(createDriverRepository.callsCount).toBe(1);
   });
 
@@ -69,14 +67,14 @@ describe('CreatePassenger', () => {
       name: 'any_name',
       email: 'any_email',
       document: '00099735326',
-      car_plate: '23bdc',
+      carPlate: '23bdc',
     };
-    createDriverRepository.driver = passengerPayload;
+    createDriverRepository.driver = new Driver(passengerPayload);
     createDriverRepository.output = 'any_passenger_id';
     const payload = {
       ...passengerPayload,
     };
-    const result = sut.perform(payload);
+    const result = sut.perform(new Driver(payload));
     await expect(result).rejects.toThrow();
   });
 });

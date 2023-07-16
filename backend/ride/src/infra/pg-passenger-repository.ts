@@ -1,6 +1,6 @@
 import { Client } from 'pg';
-import { PassengerDTO, SavePassenger } from './passenger';
-import { PassengerRepository } from './save-passenger';
+import { PassengerDTO, SavePassenger } from '../domain/passenger';
+import { PassengerRepository } from '../application/usecases/save-passenger';
 
 export class PGPassengerRepository implements PassengerRepository {
   constructor(private readonly db: Client) {}

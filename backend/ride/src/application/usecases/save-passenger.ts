@@ -1,4 +1,8 @@
-import { Passenger, SavePassenger, PassengerDTO } from './passenger';
+import {
+  Passenger,
+  PassengerDTO,
+  SavePassenger,
+} from '@/domain/models/passenger';
 
 export interface PassengerRepository {
   find(params: {

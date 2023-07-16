@@ -1,4 +1,4 @@
-import { CpfValidator } from '@/cpf';
+import { CpfValidator } from '@/domain/models/cpf';
 
 export type PassengerDTO = {
   id?: string;

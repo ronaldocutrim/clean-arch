@@ -1,8 +1,8 @@
-import { PassengerDTO, SavePassenger } from '@/usecases/passenger/passenger';
 import {
   PassengerRepository,
   SavePassengerUseCase,
-} from '@/usecases/passenger/save-passenger';
+} from '@/application/usecases/save-passenger';
+import { PassengerDTO, SavePassenger } from '@/domain/models/passenger';
 
 class PassengerRepositorySpy implements PassengerRepository {
   passenger?: PassengerDTO;

@@ -1,11 +1,13 @@
 import express from 'express';
 import Ride from './ride';
 
-import { PostgresClient } from './postgress';
-import { PGDriverRepository } from './usecases/driver/driver-repository';
-import { SaveDriverUseCase } from './usecases/driver/save-driver';
-import { PGPassengerRepository } from './usecases/passenger/passenger-repository';
-import { SavePassengerUseCase } from './usecases/passenger/save-passenger';
+import { PostgresClient } from './infra/postgress';
+
+import { SaveDriverUseCase } from './application/usecases/save-driver';
+import { PGPassengerRepository } from './infra/pg-passenger-repository';
+import { SavePassengerUseCase } from './application/usecases/save-passenger';
+import { PGDriverRepository } from './infra/pg-driver-repository';
+import { Driver } from './domain/models/driver';
 
 const app = express();
 
@@ -50,14 +52,15 @@ app.post('/drivers', async function (req, res) {
     name: req.body.name,
     email: req.body.email,
     document: req.body.document,
-    car_plate: req.body.car_plate,
+    carPlate: req.body.car_plate,
   };
   try {
     const client = await PostgresClient.getInstance();
     if (!client) throw new Error('connection error');
+    const driver = new Driver(payload);
     const driverRepository = new PGDriverRepository(client);
     const saveDriverUseCase = new SaveDriverUseCase(driverRepository);
-    const result = await saveDriverUseCase.perform(payload);
+    const result = await saveDriverUseCase.perform(driver);
     res.json({ driver_id: result.driverId });
   } catch (e) {
     const error = e as Error;
