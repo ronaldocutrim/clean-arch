@@ -8,6 +8,7 @@ import { PGDriverRepository } from './infra/pg-driver-repository';
 import { PostgressAdapter } from './infra/database/pg-adapter';
 
 const app = express();
+const client = PostgressAdapter.getInstance();
 
 app.use(express.json());
 
@@ -33,8 +34,6 @@ app.post('/passengers', async function (req, res) {
   };
 
   try {
-    const client = PostgressAdapter.getInstance();
-    if (!client) throw new Error('connection error');
     const passengerRepository = new PGPassengerRepository(client);
     const savePassengerUseCase = new SavePassengerUseCase(passengerRepository);
     const result = await savePassengerUseCase.perform(payload);
@@ -53,9 +52,6 @@ app.post('/drivers', async function (req, res) {
     carPlate: req.body.car_plate,
   };
   try {
-    const client = PostgressAdapter.getInstance();
-    if (!client) throw new Error('connection error');
-
     const driverRepository = new PGDriverRepository(client);
     const saveDriverUseCase = new SaveDriverUseCase(driverRepository);
     const result = await saveDriverUseCase.perform(payload);

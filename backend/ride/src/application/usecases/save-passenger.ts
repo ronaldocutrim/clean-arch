@@ -15,7 +15,7 @@ export class SavePassengerUseCase implements SavePassenger {
       document: passengerData.document.value,
       email: passengerData.email.value,
     });
-    console.log(passengerData.email);
+
     if (alreadyExist) throw new Error('conflit data');
     const result = await this.passengerRepository.savePassenger(passengerData);
     return result;

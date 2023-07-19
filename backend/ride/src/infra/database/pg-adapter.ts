@@ -26,6 +26,7 @@ export class PostgressAdapter implements DatabaseConnection {
 
   async connectIfNeeded(): Promise<Client> {
     if (!this.isConnected) {
+      console.log('connect');
       await this.connection.connect();
       this.isConnected = true;
     }

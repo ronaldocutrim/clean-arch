@@ -26,7 +26,7 @@ test('Deve retornar um erro de conflito se o documento do motorista ja existir',
   const payload = {
     name: driverData.name,
     email: driverData.email,
-    document: '61241093369',
+    document: '00099735326',
     car_plate: driverData.car_plate,
   };
   const response = await axios.post(sutUrl, payload);
@@ -93,7 +93,7 @@ test('Deve retornar um erro se o documento for invalido', async () => {
   expect(response.data.message).toBe('Invalid Cpf');
 });
 
-test.only('Deve cadastrar um motorista', async () => {
+test('Deve cadastrar um motorista', async () => {
   const response = await axios.post(sutUrl, driverData);
   expect(response.status).toBe(200);
   expect(response.data.driver_id).toBeTruthy();

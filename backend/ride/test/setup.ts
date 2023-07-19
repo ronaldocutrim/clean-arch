@@ -5,9 +5,9 @@ axios.defaults.validateStatus = function () {
   return true;
 };
 
-beforeEach(async () => {
-  const client = PostgressAdapter.getInstance();
+const client = PostgressAdapter.getInstance();
 
+beforeEach(async () => {
   if (client) {
     await client.query('DELETE FROM passengers WHERE document = $1', [
       '61241093369',
