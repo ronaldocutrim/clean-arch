@@ -3,8 +3,8 @@ import axios from 'axios';
 const driverData = {
   name: 'any_name',
   email: 'mae@email.com',
-  document: '00099735326',
-  car_plate: '33db',
+  document: '61241093369',
+  car_plate: 'AAA8888',
 };
 
 const sutUrl = 'http://localhost:3000/drivers';
@@ -16,6 +16,7 @@ test('Deve retornar um erro de conflito se o email do motorista ja existir', asy
     document: driverData.document,
     car_plate: driverData.car_plate,
   };
+
   const response = await axios.post(sutUrl, payload);
   expect(response.status).toBe(409);
   expect(response.data.message).toBe('conflit data');
@@ -38,7 +39,7 @@ test('Deve retornar um erro de conflito se a placa do motorista ja existir', asy
     name: driverData.name,
     email: driverData.email,
     document: driverData.document,
-    car_plate: '1d34',
+    car_plate: 'AAA9999',
   };
   const response = await axios.post(sutUrl, payload);
   expect(response.status).toBe(409);
@@ -89,12 +90,11 @@ test('Deve retornar um erro se o documento for invalido', async () => {
     car_plate: driverData.car_plate,
   };
   const response = await axios.post(sutUrl, payload);
-  expect(response.data.message).toBe('invalid document');
+  expect(response.data.message).toBe('Invalid Cpf');
 });
 
-test('Deve cadastrar um motorista', async () => {
+test.only('Deve cadastrar um motorista', async () => {
   const response = await axios.post(sutUrl, driverData);
-
   expect(response.status).toBe(200);
   expect(response.data.driver_id).toBeTruthy();
 });

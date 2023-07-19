@@ -1,28 +1,32 @@
-import { CpfValidator } from '@/domain/models/cpf';
-
-export type PassengerDTO = {
-  id?: string;
-  name: string;
-  email: string;
-  document: string;
-};
+import { Cpf } from '@/domain/models/cpf';
+import Email from './email';
 
 export class Passenger {
-  constructor(readonly passengerData: PassengerDTO) {
-    if (!passengerData.document || !passengerData.email || !passengerData.name)
+  constructor(
+    private readonly values: {
+      id?: string;
+      name: string;
+      email: string;
+      document: string;
+    }
+  ) {
+    if (!values.document || !values.email || !values.name)
       throw new Error('required data not provided');
-    if (!CpfValidator.validate(passengerData.document))
-      throw new Error('invalid document');
   }
-}
 
-export interface SavePassenger {
-  perform(params: SavePassenger.Params): Promise<SavePassenger.Result>;
-}
+  get id(): string | undefined {
+    return this.values.id;
+  }
 
-export namespace SavePassenger {
-  export type Params = PassengerDTO;
-  export type Result = {
-    passengerId: string;
-  };
+  get name(): string {
+    return this.values.name;
+  }
+
+  get email(): Email {
+    return new Email(this.values.email);
+  }
+
+  get document(): Cpf {
+    return new Cpf(this.values.document);
+  }
 }

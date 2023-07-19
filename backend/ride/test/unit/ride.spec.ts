@@ -1,4 +1,4 @@
-import Ride from '@/ride';
+import Ride from '@/domain/models/ride';
 
 test('Deve fazer o cálculo do preço de uma corrida durante o dia', function () {
   const ride = new Ride();

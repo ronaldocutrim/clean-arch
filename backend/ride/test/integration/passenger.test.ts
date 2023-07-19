@@ -3,7 +3,7 @@ import axios from 'axios';
 const passengerData = {
   name: 'any_name',
   email: 'mae@email.com',
-  document: '00099735326',
+  document: '61241093369',
 };
 
 const sutUrl = 'http://localhost:3000/passengers';
@@ -23,7 +23,7 @@ test('Deve retornar um erro de conflito se o documento do passageiro ja existir'
   const payload = {
     name: passengerData.name,
     email: passengerData.email,
-    document: '61241093369',
+    document: '37759595999',
   };
   const response = await axios.post(sutUrl, payload);
   expect(response.status).toBe(409);
@@ -37,7 +37,7 @@ test('Deve retornar um erro se o documento for invalido', async () => {
     document: 'invalid_document',
   };
   const response = await axios.post(sutUrl, payload);
-  expect(response.data.message).toBe('invalid document');
+  expect(response.data.message).toBe('Invalid Cpf');
 });
 
 test('Deve cadastrar um passageiro', async () => {

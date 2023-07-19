@@ -1,14 +1,18 @@
-import {
-  PassengerRepository,
-  SavePassengerUseCase,
-} from '@/application/usecases/save-passenger';
-import { PassengerDTO, SavePassenger } from '@/domain/models/passenger';
+import { GetPassengerRepository } from '@/application/repositories/get-passenger-repository';
+import { SavePassengerRepository } from '@/application/repositories/save-passenger-repository';
+import { SavePassengerUseCase } from '@/application/usecases/save-passenger';
+import { Passenger } from '@/domain/models/passenger';
+import { SavePassenger } from '@/domain/usecases/save-passenger';
 
-class PassengerRepositorySpy implements PassengerRepository {
-  passenger?: PassengerDTO;
+class PassengerRepositorySpy
+  implements GetPassengerRepository, SavePassengerRepository
+{
+  passenger?: any;
   output = '';
   callsCount = 0;
-  async create(params: PassengerDTO): Promise<SavePassenger.Result> {
+  async savePassenger(
+    params: SavePassengerRepository.Params
+  ): SavePassengerRepository.Result {
     this.callsCount++;
     this.passenger = params;
     return {
@@ -16,12 +20,11 @@ class PassengerRepositorySpy implements PassengerRepository {
     };
   }
 
-  async find(params: {
-    email: string;
-    document: string;
-  }): Promise<PassengerDTO | null> {
+  async getPassenger(
+    params: GetPassengerRepository.Params
+  ): GetPassengerRepository.Result {
     if (params.document === this.passenger?.document)
-      return this.passenger as PassengerDTO;
+      return this.passenger as Passenger;
     return null;
   }
 }
@@ -41,19 +44,19 @@ describe('CreatePassenger', () => {
 
     const payload = {
       name: 'any_name',
-      email: 'any_email',
+      email: 'any_email@email.com',
       document: '61241093369',
     };
 
     await sut.perform(payload);
 
-    expect(createPassengerRepository.passenger).toEqual(payload);
+    expect(createPassengerRepository.passenger).toEqual(new Passenger(payload));
   });
   test('Garantir que o repositorio vai ser chamado apenas uma vez', async () => {
     const { sut, createPassengerRepository } = makeSut();
     const payload = {
       name: 'any_name',
-      email: 'any_email',
+      email: 'any_email@email.com',
       document: '61241093369',
     };
 
@@ -65,7 +68,7 @@ describe('CreatePassenger', () => {
     const { sut, createPassengerRepository } = makeSut();
     const passengerPayload = {
       name: 'any_name',
-      email: 'any_email',
+      email: 'any_email@email.com',
       document: '00099735326',
     };
     createPassengerRepository.passenger = passengerPayload;

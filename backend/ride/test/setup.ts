@@ -1,4 +1,4 @@
-import { PostgresClient } from '@/infra/postgress';
+import { PostgressAdapter } from '@/infra/database/pg-adapter';
 import axios from 'axios';
 
 axios.defaults.validateStatus = function () {
@@ -6,14 +6,14 @@ axios.defaults.validateStatus = function () {
 };
 
 beforeEach(async () => {
-  const client = await PostgresClient.getInstance();
+  const client = PostgressAdapter.getInstance();
+
   if (client) {
     await client.query('DELETE FROM passengers WHERE document = $1', [
-      '00099735326',
+      '61241093369',
     ]);
     await client.query('DELETE FROM drivers WHERE document = $1', [
-      '00099735326',
+      '61241093369',
     ]);
-    PostgresClient.disconect();
   }
 });

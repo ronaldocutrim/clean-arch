@@ -1,29 +1,23 @@
-import {
-  Passenger,
-  PassengerDTO,
-  SavePassenger,
-} from '@/domain/models/passenger';
-
-export interface PassengerRepository {
-  find(params: {
-    email: string;
-    document: string;
-  }): Promise<PassengerDTO | null>;
-  create(params: SavePassenger.Params): Promise<SavePassenger.Result>;
-}
+import { Passenger } from '@/domain/models/passenger';
+import { SavePassenger } from '@/domain/usecases/save-passenger';
+import { GetPassengerRepository } from '../repositories/get-passenger-repository';
+import { SavePassengerRepository } from '../repositories/save-passenger-repository';
 
 export class SavePassengerUseCase implements SavePassenger {
-  constructor(private readonly passengerRepository: PassengerRepository) {}
+  constructor(
+    private readonly passengerRepository: GetPassengerRepository &
+      SavePassengerRepository
+  ) {}
   async perform(params: SavePassenger.Params): Promise<SavePassenger.Result> {
-    const { passengerData } = new Passenger(params);
+    const passengerData = new Passenger(params);
 
-    const alreadyExist = await this.passengerRepository.find({
-      document: passengerData.document,
-      email: passengerData.email,
+    const alreadyExist = await this.passengerRepository.getPassenger({
+      document: passengerData.document.value,
+      email: passengerData.email.value,
     });
-
+    console.log(passengerData.email);
     if (alreadyExist) throw new Error('conflit data');
-    const result = await this.passengerRepository.create(passengerData);
+    const result = await this.passengerRepository.savePassenger(passengerData);
     return result;
   }
 }

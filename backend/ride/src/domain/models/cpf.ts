@@ -1,7 +1,12 @@
-export class CpfValidator {
-  private static MAX_CHAR_CPF = 11;
+export class Cpf {
+  private MAX_CHAR_CPF = 11;
 
-  private static getVerifierDigit(cpfArray: number[]) {
+  constructor(readonly value: string) {
+    if (!this.validate(value)) throw new Error('Invalid Cpf');
+    this.value = this.serializeCpf(value);
+  }
+
+  private getVerifierDigit(cpfArray: number[]) {
     const result = Array.from(cpfArray)
       .reverse()
       .reduce((acc, value, index) => {
@@ -14,19 +19,19 @@ export class CpfValidator {
     return rest < 2 ? 0 : 11 - rest;
   }
 
-  private static isValidCpf(cpfNumber: string) {
-    const cpf = CpfValidator.serializeCpf(cpfNumber);
-    return cpf.length >= CpfValidator.MAX_CHAR_CPF;
+  private isValidCpf(cpfNumber: string) {
+    const cpf = this.serializeCpf(cpfNumber);
+    return cpf.length >= this.MAX_CHAR_CPF;
   }
 
-  private static serializeCpf(cpfNumber: string) {
+  private serializeCpf(cpfNumber: string) {
     return cpfNumber.replace(/\D/g, '');
   }
 
-  static validate(cpfNumber: string): boolean {
-    if (!cpfNumber || !CpfValidator.isValidCpf(cpfNumber)) return false;
+  private validate(cpfNumber: string): boolean {
+    if (!cpfNumber || !this.isValidCpf(cpfNumber)) return false;
 
-    const serializedCpfNumber = CpfValidator.serializeCpf(cpfNumber);
+    const serializedCpfNumber = this.serializeCpf(cpfNumber);
 
     const repeatedDocumentNumbers = serializedCpfNumber
       .split('')
@@ -37,11 +42,11 @@ export class CpfValidator {
     const arrayDocument = serializedCpfNumber.split('').map(Number);
     const arrayDocumentWithouVerifierDigit = arrayDocument.slice(0, -2);
 
-    const firstMultiplierDigitResult = CpfValidator.getVerifierDigit(
+    const firstMultiplierDigitResult = this.getVerifierDigit(
       arrayDocumentWithouVerifierDigit
     );
 
-    const secondMultiplierDigitResult = CpfValidator.getVerifierDigit([
+    const secondMultiplierDigitResult = this.getVerifierDigit([
       ...arrayDocumentWithouVerifierDigit,
       firstMultiplierDigitResult,
     ]);
